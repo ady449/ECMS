@@ -1,26 +1,34 @@
 import React from 'react';
-import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
+import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity, TouchableHighlight} from 'react-native';
+import Screen2 from "./Screen2";
+// import WelcomeScreen from './WelcomeScreen'; 
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import SwipeButton from '@dillionverma/react-native-swipe-button';
+
 
 // rsf
 function Screen1({route, navigation}) {
-    const { CarName } = route.params;
+    const {CarName, carId } = route.params;
+    
+    
+    const Stack = createStackNavigator();
     return (
-        <>
-      {/* <SafeAreaView style={styles.NavBar}>
-      <Image style={styles.dropdownicon} source={require("ECMS/app/img/Vector.png") } />
-      {/* <Dropdown /> */}
-      {/* </SafeAreaView> */} 
-
+    
       <View>
-          <AppButton title={CarName} s={styles.appButtonContainer} />
-          <Image style={styles.carimg} source={require("../img/tesla2.png")} />
-          <AppButton title="Unlock" s={styles.appButtonContainer2} />
+        <ScrollView>
+          <AppButton key={carId} title={CarName} s={styles.appButtonContainer} onPress={() => navigation.goBack()} />
+          <TouchableHighlight onPress={() => navigation.navigate('Screen2', {CarName: CarName})}>
+
+              <Image style={styles.carimg} source={require("../img/tesla2.png")} />
+          
+          </TouchableHighlight>
+          <SwipeButton Icon={<Text></Text>} onComplete={() => Alert.alert("Car locked")} title="Swipe to unlock the car"/>
           <AppButton title="View Car" s={styles.appButtonContainer2}/>
           <AppButton title="Set Temp" s={styles.appButtonContainer2}/>
+        </ScrollView>
       </View>
-
-
-        </>
+      
     );
 }
 

@@ -10,12 +10,7 @@ import styleNavDrawer from './app/styles/styleNavDrawer'
 
 function App() {
     return (
-      // <NavigationContainer theme={styleNavDrawer}>
-      // <WelcomeScreen />
-      // {/* </NavigationContainer> */}
       <MyDrawer/>
-      // // <WelcomeScreen />
-      // // <Text>salut</Text> */}
     );
 
 }

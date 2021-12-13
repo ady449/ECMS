@@ -1,36 +1,28 @@
 // import React from 'react';
 import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
 import * as React from 'react';
+import styleNavDrawer from '../styles/styleNavDrawer';
+
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 
 
-
 // rsf
-function Screen2() {
+function Screen2({route, navigation}) {
+  // const {carname} = navigation.getParam('car');
+    const {CarName, carId} = route.params;
+    
     return (
-        <>
-      {/* <SafeAreaView style={styles.NavBar}>
-      <Image style={styles.dropdownicon} source={require("ECMS/app/img/Vector.png") } />
-      {/* <Dropdown /> */}
-       {/* <NavigationContainer>
-      <MyDrawer />
-    </NavigationContainer>
-
-
-      </SafeAreaView> */}
+      
       <View>
-        <AppButton title="car 1" s={styles.appButtonContainer} />
-        <Text style={styles.TextStatus}>STATUS</Text>
+        
+          <AppButton  title={CarName} s={styles.appButtonContainer} onPress={() => navigation.goBack()}/>
+          <Text style={styles.TextStatus}>STATUS</Text> 
+        
+
       </View>
     
-        </>
     );
 }
 
