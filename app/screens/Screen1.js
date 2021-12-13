@@ -2,15 +2,17 @@ import React from 'react';
 import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
 
 // rsf
-function Screen1() {
+function Screen1({route, navigation}) {
+    const { CarName } = route.params;
     return (
         <>
       {/* <SafeAreaView style={styles.NavBar}>
       <Image style={styles.dropdownicon} source={require("ECMS/app/img/Vector.png") } />
       {/* <Dropdown /> */}
       {/* </SafeAreaView> */} 
+
       <View>
-          <AppButton title="car 1" s={styles.appButtonContainer} />
+          <AppButton title={CarName} s={styles.appButtonContainer} />
           <Image style={styles.carimg} source={require("../img/tesla2.png")} />
           <AppButton title="Unlock" s={styles.appButtonContainer2} />
           <AppButton title="View Car" s={styles.appButtonContainer2}/>

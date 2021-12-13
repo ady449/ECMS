@@ -2,9 +2,12 @@ import React from 'react';
 import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
 import styleNavDrawer from '../styles/styleNavDrawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import Screen1 from './Screen1';
-
+import Screen2 from './Screen2';
+import DrawerBar from '../components/DrawerBar'
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 const AppButton = ({ onPress, title, backgroundColor }) => (
@@ -21,40 +24,51 @@ const AppButton = ({ onPress, title, backgroundColor }) => (
   </TouchableOpacity>
 );
 
+function ButtonsPrint({navigation}){
+
+    const cars = ["car 1", "car 2", "car 3", "car 4", "car 5", "car 6"];
+    // const buttoncar = [];
+    // for (const i of cars ) {
+    //   buttoncar.push(<AppButton key={i} title={i} onPress={() => navigation.navigate('Screen1', {CarName: {i} } )} />)
+  // }
+  return(
+    // buttoncar
+    cars.map(cars =><AppButton title={cars} onPress={() => navigation.navigate('Screen1', {CarName: {cars} } )} /> )
+  )    
+
+}
 
 // rsf
 function WelcomeScreen({ navigation }) {
+    const cars = ["car 1", "car 2", "car 3", "car 4", "car 5", "car 6"];
+
     return (
       <>
         <ScrollView contentContainerStyle={styles.background} >
             <Text style={styles.TitleText}>
                 The list of cars
             </Text>
-            <Button title="test" onPress={() => navigation.navigate("Sc")}/>
-            <AppButton title="car 1" onPress={() => navigation.navigate('Screen1', {name: 'car 1'})} />
-            <AppButton title="car 2" onPress={() => navigation.navigate('Screen1', {name: 'car 2'})} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1', {name: 'car 3'})} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1')} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1')} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1')} />
+            {/* {ButtonsPrint({ navigation })} */}
+            {cars.map(i =><AppButton title={i} onPress={() => navigation.navigate('Screen1', {CarName: {i} })} /> )}
         </ScrollView>
       </>
     );
 }
 
-
-
-
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 function App() {
   return (
-    
-      <Stack.Navigator initialRouteName="Home" >
-        <Stack.Screen name="Home" component={WelcomeScreen} />
-        <Stack.Screen name="Screen1" component={Screen1} />
-      </Stack.Navigator>
+    // <NavigationContainer theme={styleNavDrawer}>
+    <Stack.Navigator initialRouteName="Home" >
+      <Stack.Screen name="Home" component={WelcomeScreen} />
+      <Stack.Screen name="Screen1" component={Screen1} />
+      <Stack.Screen name="Screen2" component={Screen2} />
+      <Stack.Screen name="DrawerBar" component={DrawerBar} />
 
+    </Stack.Navigator>
+    // </NavigationContainer>
+    
 
   );
 }
