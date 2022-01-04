@@ -5,7 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Screen1 from './Screen1';
 import Screen2 from './Screen2';
-
+import ViewCar from './ViewCar';
+import SetTemp from './SetTemp';
+import styles from "../styles/styleWelcomeS";
+// import cryp from '../App.js'
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -37,7 +40,22 @@ const AppButton = ({onPress, title}) => (
 // }
 
 // rsf
+
+
 function WelcomeScreen({ navigation }) {
+    // const mysql = require('mysql2');
+    // const pool = mysql.createConnection({
+    //   host     : 'localhost', // Your connection adress (localhost).
+    //   user     : 'root',     // Your database's username.
+    //   password : '',        // Your database's password.
+    //   database : 'ecms'   // Your database's name.
+  
+    // });
+    // pool.connect();
+    // pool.query('select nume from cars', (err, result, fields)=>{
+    //   console.log(result);
+    //   });
+    // pool.end();
     const cars = ["car 1", "car 2", "car 3", "car 4", "car 5", "car 6"];
 
     return (
@@ -49,7 +67,7 @@ function WelcomeScreen({ navigation }) {
             </Text>
             {/* {ButtonsPrint({ navigation })} */}
             {/* {cars.map(car =><AppButton key={car} title={car} onPress={() => navigation.navigate('Screen1', {CarName: "{car}" })} /> )} */}
-          <AppButton key={cars[0]} title={cars[0]} onPress={() => navigation.navigate('Screen1', {CarName: cars[0], carId:1 })} />
+          <AppButton key={cars[0]} title={cars[0]} onPress={() => navigation.navigate('Screen1', {CarName: cars[0] , carId:1 })} />
           <AppButton key={cars[1]} title={cars[1]} onPress={() => navigation.navigate('Screen1', {CarName: cars[1] })} />
           <AppButton key={cars[2]} title={cars[2]} onPress={() => navigation.navigate('Screen1', {CarName: cars[2] })} />
           <AppButton key={cars[3]} title={cars[3]} onPress={() => navigation.navigate('Screen1', {CarName: cars[3] })} />
@@ -63,21 +81,6 @@ function WelcomeScreen({ navigation }) {
 
 
 
-// function WelcomeScreen({ navigation }) {
-//     const cars = ["car 1", "car 2", "car 3", "car 4", "car 5", "car 6"];
-//     return (
-     
-//       <View>
-//         <ScrollView contentContainerStyle={styles.background} >
-//             <Text style={styles.TitleText}>
-//                 The list of cars
-//             </Text>
-            
-//         </ScrollView>
-//       </View>
-//     );
-// }
-
 const Stack = createStackNavigator();
 
 function App() {
@@ -87,6 +90,8 @@ function App() {
       <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <Stack.Screen name="Screen1" component={Screen1} />
       <Stack.Screen name="Screen2" component={Screen2} />
+      <Stack.Screen name="ViewCar" component={ViewCar} />
+      <Stack.Screen name="SetTemp" component={SetTemp} />
       
     </Stack.Navigator>
     // </NavigationContainer>
@@ -94,67 +99,6 @@ function App() {
 
   );
 }
-
-
-
-
-
-
-// rnss
-const styles = StyleSheet.create({
-    background: {
-        backgroundColor: 'rgba(222, 242, 241, 1)',
-        flexGrow:1, 
-        alignItems:'center', 
-        justifyContent: 'center'
-    },
-    TitleText:{ 
-        textDecorationLine: 'underline',
-        fontSize: 30,
-        paddingTop: 30,
-        alignSelf: 'center'
-    },
-    NavBar: {
-        with: "100%",
-        elevation:8,
-        height: 50,
-        backgroundColor: 'rgba(43, 122, 120, 1)'
-    },
-    Button1: {
-        color: 'rgba(53, 167, 156, 1)',
-        borderWidth: 1,
-        position: 'absolute',
-        width: 50,
-        height: 80,
-        borderRadius: 20,
-    },
-     appButtonContainer: {
-        elevation: 8,
-        backgroundColor: 'rgba(53, 167, 156, 1)',
-        borderRadius: 10,
-        // padding: 50,
-        marginTop: 25,
-        marginBottom: 25,
-        marginHorizontal: "20%",
-
-        paddingVertical: 30,
-        paddingHorizontal: "25%",
-    },
-    appButtonText: {
-      color: "white",
-      fontSize: 17,
-    },
-    dropdownicon: {
-      // justityContent: 'flex-end'
-      position: 'absolute',
-      right: 0,
-      margin: 10
-    
-    }
-     
-    
-})
-
 
 
 
