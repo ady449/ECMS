@@ -6,100 +6,64 @@ import styleNavDrawer from '../styles/styleNavDrawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
-
+import styleOutputLabel from '../styles/styleOutputLabel';
+import styles from '../styles/styleScreen2'
 
 // rsf
 function Screen2({route, navigation}) {
     const {CarName, carId} = route.params;
     return (
-      <View>
+      <View style={{flexWrap: 'nowrap'}}>
           <AppButton  title={CarName} s={styles.appButtonContainer} onPress={() => navigation.goBack()}/>
           <Text style={styles.TextStatus}>STATUS</Text>
+         <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+
+            <View style={styleOutputLabel.containerStatus}>
+            <Text style={styleOutputLabel.Text}>Battery life</Text>
+            <OutputLabel text="70%"/>
+            </View>
+
+           <View style={styleOutputLabel.containerStatus}>
+            <Text style={styleOutputLabel.Text}>Windows</Text>
+            <OutputLabel text="closed"/>
+            </View>
+
+           <View style={styleOutputLabel.containerStatus}>
+            <Text style={styleOutputLabel.Text}>VIN</Text>
+            <OutputLabel text="WV123456789101112"/>
+            </View>
+
+           <View style={styleOutputLabel.containerStatus}>
+            <Text style={styleOutputLabel.Text}>Battery Temp</Text>
+            <OutputLabel text="5"/>
+            </View>
+            <View style={{flexDirection:"row", flexWrap:"wrap", width:"50%",height:"30%"}}>
+            <Text style={styleOutputLabel.Text}>Error</Text>
+            <OutputLabel text="No Error"/>
+            </View>
+            <View style={{flexDirection:"row", flexWrap:"wrap",width:"50%", height:"30%" }}>
+            <Text style={styleOutputLabel.Text}>ITP</Text>
+            <OutputLabel text="O1/01/2023"/>
+            </View>
+           <View style={styleOutputLabel.containerStatus}> 
+            <Text style={styleOutputLabel.Text}>Insurance</Text>
+            <OutputLabel text="O1/01/2023"/>
+            </View>
+            
+          </View>
       </View>
     );
 }
 
-function OutputLabel()
-
-// rnss
-const styles = StyleSheet.create({
-    background: {
-        backgroundColor: 'rgba(222, 242, 241, 1)',
-        flexGrow:1, 
-        alignItems:'center', 
-        justifyContent: 'center'
-    },
-    TextStatus: {
-      fontWeight: "bold",
-      textDecorationLine: "underline",
-      fontSize: 25,
-      color: "black",
-      alignSelf: "center"
-    },
-    TitleText:{ 
-        textDecorationLine: 'underline',
-        fontSize: 30,
-        paddingTop: 30,
-        alignSelf: 'center'
-    },
-    NavBar: {
-        with: "100%",
-        elevation:8,
-        height: 50,
-        backgroundColor: 'rgba(43, 122, 120, 1)'
-    },
-    Button1: {
-        color: 'rgba(53, 167, 156, 1)',
-        borderWidth: 1,
-        position: 'absolute',
-        width: 50,
-        height: 80,
-        borderRadius: 20,
-    },
-    appButtonContainer: {
-        elevation: 10,
-        backgroundColor: 'rgba(53, 167, 156, 1)',
-        borderRadius: 10,
-        // padding: 50,
-        marginTop: 25,
-        marginBottom: 25,
-        marginHorizontal: "10%",
-
-        paddingVertical: 30,
-        paddingHorizontal: "35%",
-    },
-    appButtonContainer2: {
-        elevation: 8,
-        backgroundColor: 'rgba(53, 167, 146, 1)',
-        borderRadius: 10,
-        // padding: 50,
-        marginTop: 25,
-        marginBottom: 10,
-        marginHorizontal: "20%",
-        paddingVertical: 20,
-        alignItems: "center"
-    },
-    appButtonText: {
-      color: "white",
-      fontSize: 17,
+const OutputLabel = ({text})=>(
+    <View style={styleOutputLabel.OutputLabel}>
+      <Text style={{fontSize: 16}}>{text}</Text>
       
-    },
-    dropdownicon: {
-      // justityContent: 'flex-end'
-      position: 'absolute',
-      right: 0,
-      margin: 10,
-    },
-    carimg:{
-        width: "100%",
-        height: 200,
-        resizeMode: "contain",
-        // resizeMethod:"resize",
-        // position: "fix",
-    }
-     
-    
-})
+    </View>
+);
+
+//1.9-1
+
 
 
 

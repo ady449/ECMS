@@ -11,14 +11,7 @@ import WelcomeScreen from "../screens/WelcomeScreen";
 import styleNavDrawer from '../styles/styleNavDrawer';
 import Screen1 from "../screens/Screen1";
 import Screen2 from "../screens/Screen2";
-import Input1 from "./InputLabel"
-
-
-function Test({ navigation }) {
-  return (
- <Input1 />
-  );
-}
+// import mysql from "../database/mysql";
 
 function HomePage({ navigation }) {
   return (
@@ -28,12 +21,12 @@ function HomePage({ navigation }) {
 
 function Page2({ navigation }) {
   return (
-    <Screen1></Screen1>
+    <Screen1 />
   );
 }
 function Page3({ navigation }) {
   return (
-    <Screen2></Screen2>
+    <Screen2 />
   );
 }
 
@@ -65,9 +58,7 @@ class MyDrawer extends React.Component {
         <Drawer.Screen name="Home" component={HomePage}         /> 
         <Drawer.Screen name="Add Car"  component={AddCar}       />
         <Drawer.Screen name="Delete Car"  component={DeleteCar} />
-        <Drawer.Screen name="Screen1"  component={Page2}        />
-        <Drawer.Screen name="Screen2"  component={Page3}        />
-        <Drawer.Screen name="Test"  component={Test}            />
+        
       </Drawer.Navigator>
     </NavigationContainer>
     );
