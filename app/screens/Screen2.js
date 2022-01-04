@@ -10,23 +10,16 @@ import 'react-native-gesture-handler';
 
 // rsf
 function Screen2({route, navigation}) {
-  // const {carname} = navigation.getParam('car');
     const {CarName, carId} = route.params;
-    
     return (
-      
       <View>
-        
           <AppButton  title={CarName} s={styles.appButtonContainer} onPress={() => navigation.goBack()}/>
-          <Text style={styles.TextStatus}>STATUS</Text> 
-        
-
+          <Text style={styles.TextStatus}>STATUS</Text>
       </View>
-    
     );
 }
 
-
+function OutputLabel()
 
 // rnss
 const styles = StyleSheet.create({
