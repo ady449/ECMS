@@ -19,12 +19,12 @@ class SetTemp extends React.Component {
        this.setState({ val: this.state.val - 1 })
    }
    render() {
-     console.log('render');
+    //  console.log('render');
      const {navigation} = this.props;
      
      return(
-
-     <View>
+ 
+     <View >
         <View >
             <Text style={styles.txt}>Set Temp</Text>
         </View>
@@ -55,15 +55,18 @@ const styles = StyleSheet.create({
     },
     view: {
         flexDirection:"row",
+        // alignSelf: "center",
         // marginHorizontal: 10,
-        marginLeft: 10,
-        marginRight: 40,
+        // marginLeft: 10,
+        // marginRight: 40,
         
     },
-    celsius:{width:40,
+    celsius:{
+        width:40,
         height:40,
     },
-    txt:{fontSize:20,
+    txt:{
+        fontSize:20,
         color:"black",
         fontWeight:"bold",
         alignSelf: "center",

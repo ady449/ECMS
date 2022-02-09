@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Text, Button } from 'react-native';
+import {useEffect, useState} from 'react';
+import { RefreshControl, View, Text, Button } from 'react-native';
 import { NavigationContainer,DefaultTheme } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -11,7 +12,12 @@ import WelcomeScreen from "../screens/WelcomeScreen";
 import styleNavDrawer from '../styles/styleNavDrawer';
 import Screen1 from "../screens/Screen1";
 import Screen2 from "../screens/Screen2";
+import DeleteCar from "../screens/DeleteCar";
 // import mysql from "../database/mysql";
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 function HomePage({ navigation }) {
   return (
@@ -38,12 +44,10 @@ function AddCar() {
     </View>
   );
 }
-function DeleteCar() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>DeleteCar Screen</Text>
 
-    </View>
+function DC() {
+  return (
+    <DeleteCar />
   );
 }
 
@@ -52,12 +56,19 @@ const Drawer = createDrawerNavigator();
 
 class MyDrawer extends React.Component {
   render() {
+    const [refreshing, setRefreshing] = React.useState(false)
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+      }, []);
     return (
-    <NavigationContainer theme={styleNavDrawer}>
-      <Drawer.Navigator screenOptions={{ headerShown: false}}>
+    <NavigationContainer theme={styleNavDrawer}
+    >
+
+      <Drawer.Navigator screenOptions={{ headerShown: false}} refreshControl = {<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
         <Drawer.Screen name="Home" component={HomePage}         /> 
         <Drawer.Screen name="Add Car"  component={AddCar}       />
-        <Drawer.Screen name="Delete Car"  component={DeleteCar} />
+        <Drawer.Screen name="Delete Car"  component={DC} />
         
       </Drawer.Navigator>
     </NavigationContainer>

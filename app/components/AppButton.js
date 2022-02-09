@@ -6,7 +6,7 @@ const AppButton = ({ onPress, title, s}) => (
   <TouchableOpacity
     onPress={onPress}
     style={[
-        styles.appButtonContainer
+        styles.appButtonContainer, s
     ]}
   >
     <Text style={[styles.appButtonText]}>

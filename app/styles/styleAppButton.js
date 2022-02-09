@@ -22,7 +22,8 @@ export default StyleSheet.create({
         marginHorizontal: "20%",
         alignItems: "center",
         paddingVertical: 30,
-        paddingHorizontal: "25%",
+        // paddingHorizontal: 20,
+        width:150,
     },
     appButtonText: {
       color: "white",

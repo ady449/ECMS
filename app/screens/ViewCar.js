@@ -85,7 +85,7 @@ const images = _.reverse([
   // require('../img/car2/IMG_4227.png'),
   // require('../img/car2/IMG_4228.png'),
   // require('../img/car2/IMG_4229.png'),
-  require('../img/car2/IMG_4230.png'),
+  
   require('../img/car2/IMG_4264.png'),
   require('../img/car2/IMG_4265.png'),
   require('../img/car2/IMG_4266.png'),

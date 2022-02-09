@@ -1,5 +1,5 @@
-import React from 'react';
-import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { RefreshControl, View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
 import styleNavDrawer from '../styles/styleNavDrawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,72 +8,84 @@ import Screen2 from './Screen2';
 import ViewCar from './ViewCar';
 import SetTemp from './SetTemp';
 import styles from "../styles/styleWelcomeS";
+import AppButton from '../components/AppButton';
+// import '../connectivity/db';
 // import cryp from '../App.js'
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
-const AppButton = ({onPress, title}) => (
-  <TouchableOpacity
+function RendCars ({navigation}, boolLoading, dataSource) {
+     
+     if(boolLoading === true){
+            return(
+                <View><Text>Se incarca</Text></View>
+            )
+    } else {
     
-    onPress={onPress}
-    style={[
-      styles.appButtonContainer
-    ]}
-  >
-    <Text style={[styles.appButtonText]}>
-      {title}
-      
-    </Text>
-  </TouchableOpacity>
-);
+      let cars = dataSource.map((val,key) => {console.log(val.id)
+          return(
+            <AppButton key={key} title={val.nume} onPress={() => navigation.navigate('Screen1', {CarName: val.nume , carId: val.id })} />
+            
+          )
+      })
 
-// function ButtonsPrint({navigation}){
+      return(
+          cars
+    )};
 
-//     const cars = ["car 1", "car 2", "car 3", "car 4", "car 5", "car 6"];
-    
-//   return(
-//     // buttoncar
-//     cars.map((car, i) =><AppButton key={i} title={car} onPress={() => navigation.navigate('Screen1', {CarName: {car} } )} /> )
-//   )    
 
-// }
-
-// rsf
+}
 
 
 function WelcomeScreen({ navigation }) {
-    // const mysql = require('mysql2');
-    // const pool = mysql.createConnection({
-    //   host     : 'localhost', // Your connection adress (localhost).
-    //   user     : 'root',     // Your database's username.
-    //   password : '',        // Your database's password.
-    //   database : 'ecms'   // Your database's name.
-  
-    // });
-    // pool.connect();
-    // pool.query('select nume from cars', (err, result, fields)=>{
-    //   console.log(result);
-    //   });
-    // pool.end();
-    const cars = ["car 1", "car 2", "car 3", "car 4", "car 5", "car 6"];
+   const [refreshing, setRefreshing] = React.useState(false);
+   const [dataSource, setDataSource] = useState([]);
+   const [boolLoading, setboolLoading] = useState(true)
 
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+      }, []);
+
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        async function fetchData(){
+            
+            fetch("http://localhost:8163/cars", {signal: signal})
+            .then((response) => response.json())
+            .then((responseJson) => { setboolLoading(false),setDataSource(responseJson) })
+            .catch((error) => {
+              if (error.name === 'AbortError') {
+                console.log('successfully aborted');
+              } else {
+                console.log(error)
+              }
+            })
+            .done()
+            return () => {controller.abort()}
+        }
+        fetchData();
+        
+    },[]);
     return (
-     
+     // sa pun aici datele fetch uite de pe localhost
+
       <View>
-        <ScrollView contentContainerStyle={styles.background} >
+        <ScrollView contentContainerStyle={styles.background} 
+           refreshControl = {<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}         
+          >
             <Text style={styles.TitleText}>
                 The list of cars
             </Text>
-            {/* {ButtonsPrint({ navigation })} */}
-            {/* {cars.map(car =><AppButton key={car} title={car} onPress={() => navigation.navigate('Screen1', {CarName: "{car}" })} /> )} */}
-          <AppButton key={cars[0]} title={cars[0]} onPress={() => navigation.navigate('Screen1', {CarName: cars[0] , carId:1 })} />
-          <AppButton key={cars[1]} title={cars[1]} onPress={() => navigation.navigate('Screen1', {CarName: cars[1] })} />
-          <AppButton key={cars[2]} title={cars[2]} onPress={() => navigation.navigate('Screen1', {CarName: cars[2] })} />
-          <AppButton key={cars[3]} title={cars[3]} onPress={() => navigation.navigate('Screen1', {CarName: cars[3] })} />
-          <AppButton key={cars[4]} title={cars[4]} onPress={() => navigation.navigate('Screen1', {CarName: cars[4] })} />
-          <AppButton key={cars[5]} title={cars[5]} onPress={() => navigation.navigate('Screen1', {CarName: cars[5] })} />
-        
+
+          {RendCars({navigation}, boolLoading , dataSource)}
         </ScrollView>
       </View>
     );
