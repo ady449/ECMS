@@ -1,124 +1,116 @@
-import React from 'react';
-import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { RefreshControl, View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
 import styleNavDrawer from '../styles/styleNavDrawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import Screen1 from './Screen1';
+import Screen2 from './Screen2';
+import ViewCar from './ViewCar';
+import SetTemp from './SetTemp';
+import styles from "../styles/styleWelcomeS";
+import AppButton from '../components/AppButton';
+// import '../connectivity/db';
+// import cryp from '../App.js'
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
+function RendCars ({navigation}, boolLoading, dataSource) {
+     
+     if(boolLoading === true){
+            return(
+                <View><Text>Se incarca</Text></View>
+            )
+    } else {
+    
+      let cars = dataSource.map((val,key) => {console.log(val.id)
+          return(
+            <AppButton key={key} title={val.nume} onPress={() => navigation.navigate('Screen1', {CarName: val.nume , carId: val.id })} />
+            
+          )
+      })
+
+      return(
+          cars
+    )};
 
 
-
-const AppButton = ({ onPress, title, backgroundColor }) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={[
-      styles.appButtonContainer,
-      backgroundColor && { backgroundColor }
-    ]}
-  >
-    <Text style={[styles.appButtonText]}>
-      {title}
-    </Text>
-  </TouchableOpacity>
-);
+}
 
 
-// rsf
 function WelcomeScreen({ navigation }) {
+   const [refreshing, setRefreshing] = React.useState(false);
+   const [dataSource, setDataSource] = useState([]);
+   const [boolLoading, setboolLoading] = useState(true)
+
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(1000).then(() => setRefreshing(false));
+      }, []);
+
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        async function fetchData(){
+            
+            fetch("http://localhost:8163/cars", {signal: signal})
+            .then((response) => response.json())
+            .then((responseJson) => { setboolLoading(false),setDataSource(responseJson) })
+            .catch((error) => {
+              if (error.name === 'AbortError') {
+                console.log('successfully aborted');
+              } else {
+                console.log(error)
+              }
+            })
+            .done()
+            return () => {controller.abort()}
+        }
+        fetchData();
+        
+    },[]);
     return (
-      <>
-        <ScrollView contentContainerStyle={styles.background} >
+     // sa pun aici datele fetch uite de pe localhost
+
+      <View>
+        <ScrollView contentContainerStyle={styles.background} 
+           refreshControl = {<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}         
+          >
             <Text style={styles.TitleText}>
                 The list of cars
             </Text>
-            <Button title="test" onPress={() => navigation.navigate("Sc")}/>
-            <AppButton title="car 1" onPress={() => navigation.navigate('Screen1', {name: 'car 1'})} />
-            <AppButton title="car 2" onPress={() => navigation.navigate('Screen1', {name: 'car 2'})} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1', {name: 'car 3'})} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1')} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1')} />
-            <AppButton title="car 3" onPress={() => navigation.navigate('Screen1')} />
+
+          {RendCars({navigation}, boolLoading , dataSource)}
         </ScrollView>
-      </>
+      </View>
     );
 }
 
 
 
-
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 function App() {
   return (
+    // <NavigationContainer theme={styleNavDrawer}>
+    <Stack.Navigator  >
+      <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+      <Stack.Screen name="Screen1" component={Screen1} />
+      <Stack.Screen name="Screen2" component={Screen2} />
+      <Stack.Screen name="ViewCar" component={ViewCar} />
+      <Stack.Screen name="SetTemp" component={SetTemp} />
+      
+    </Stack.Navigator>
+    // </NavigationContainer>
     
-      <Stack.Navigator initialRouteName="Home" >
-        <Stack.Screen name="Home" component={WelcomeScreen} />
-        <Stack.Screen name="Screen1" component={Screen1} />
-      </Stack.Navigator>
-
 
   );
 }
-
-
-
-
-
-
-// rnss
-const styles = StyleSheet.create({
-    background: {
-        backgroundColor: 'rgba(222, 242, 241, 1)',
-        flexGrow:1, 
-        alignItems:'center', 
-        justifyContent: 'center'
-    },
-    TitleText:{ 
-        textDecorationLine: 'underline',
-        fontSize: 30,
-        paddingTop: 30,
-        alignSelf: 'center'
-    },
-    NavBar: {
-        with: "100%",
-        elevation:8,
-        height: 50,
-        backgroundColor: 'rgba(43, 122, 120, 1)'
-    },
-    Button1: {
-        color: 'rgba(53, 167, 156, 1)',
-        borderWidth: 1,
-        position: 'absolute',
-        width: 50,
-        height: 80,
-        borderRadius: 20,
-    },
-     appButtonContainer: {
-        elevation: 8,
-        backgroundColor: 'rgba(53, 167, 156, 1)',
-        borderRadius: 10,
-        // padding: 50,
-        marginTop: 25,
-        marginBottom: 25,
-        marginHorizontal: "20%",
-
-        paddingVertical: 30,
-        paddingHorizontal: "25%",
-    },
-    appButtonText: {
-      color: "white",
-      fontSize: 17,
-    },
-    dropdownicon: {
-      // justityContent: 'flex-end'
-      position: 'absolute',
-      right: 0,
-      margin: 10
-    
-    }
-     
-    
-})
-
 
 
 

@@ -1,134 +1,154 @@
 // import React from 'react';
-import {View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
 import * as React from 'react';
+import {RefreshControl, View,Text, ScrollView, SafeAreaView, StyleSheet, Image, Button, Alert, TouchableOpacity} from 'react-native';
+import styleNavDrawer from '../styles/styleNavDrawer';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
-
-
-
+import styleOutputLabel from '../styles/styleOutputLabel';
+import styles from '../styles/styleScreen2';
+import AppButton from '../components/AppButton';
+import axios from 'axios';
 // rsf
-function Screen2() {
-    return (
-        <>
-      {/* <SafeAreaView style={styles.NavBar}>
-      <Image style={styles.dropdownicon} source={require("ECMS/app/img/Vector.png") } />
-      {/* <Dropdown /> */}
-       {/* <NavigationContainer>
-      <MyDrawer />
-    </NavigationContainer>
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
-      </SafeAreaView> */}
-      <View>
-        <AppButton title="car 1" s={styles.appButtonContainer} />
-        <Text style={styles.TextStatus}>STATUS</Text>
-      </View>
+function Car(CarName, carId, isLoading, dataSource) {
     
-        </>
-    );
+  
+     if(isLoading === true){
+            return(
+                <View>
+                <Text>Se incarca car {carId} </Text>
+                </View>
+              
+            ) 
+        } else {
+            let labelred="red"
+            let labelyellow="yellow"
+            let cars = dataSource.map((val,key) => {
+              
+              
+              if(carId === val.id){
+                console.log("val.winsodws: ", val.widows_o)
+                if(val.widows_o === 1){
+                  val.widows_o = "inchis"
+                  labelyellow = "white"
+                }else{
+                  val.widows_o = "deschis"
+                }
+                
+                if(val.error === "0" | val.error === ""){
+                  labelred="white"
+                  
+                }
+                
+                return(
+                    <View style={{flexDirection:"row", flexWrap:"wrap"}} key={key}>
+
+                        <View style={styleOutputLabel.containerStatus}>
+                        <Text style={styleOutputLabel.Text}>Battery life</Text>
+                        <OutputLabel text={val.batterylife} styl={"white"}/>
+                        </View>
+
+                      <View style={styleOutputLabel.containerStatus}>
+                        <Text style={styleOutputLabel.Text}>Windows</Text>
+                        
+                        <OutputLabel text={val.widows_o} styl={labelyellow}/>
+                        </View>
+
+                      <View style={styleOutputLabel.containerStatus}>
+                        <Text style={styleOutputLabel.Text}>VIN</Text>
+                        <OutputLabel text={val.vin} styl={"white"}/>
+                        </View>
+
+                      <View style={styleOutputLabel.containerStatus}>
+                        <Text style={styleOutputLabel.Text}>Battery Temp</Text>
+                        <OutputLabel text={val.batterytemp} styl={"white"}/>
+                        </View>
+                        <View style={{flexDirection:"row", flexWrap:"wrap", width:"50%",height:"30%"}}>
+                        <Text style={styleOutputLabel.Text}>Error</Text>
+                        <OutputLabel text={val.error} styl={labelred}/>
+                        </View>
+                        <View style={{flexDirection:"row", flexWrap:"wrap",width:"50%", height:"30%" }}>
+                        <Text style={styleOutputLabel.Text}>ITP</Text>
+                        <OutputLabel text={val.itp} styl={"white"}/>
+                        </View>
+                      <View style={styleOutputLabel.containerStatus}> 
+                        <Text style={styleOutputLabel.Text}>Insurance</Text>
+                        <OutputLabel text={val.insurance} styl={"white"}/>
+                        </View>
+                        
+                      </View>
+            
+                )
+              
+              }
+            });
+            
+
+          return(cars)
+        }
+            
+  
 }
 
 
+function Screen2({route, navigation}) {
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+      }, []);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [dataSource, setdataSource] = React.useState([]);
 
-// rnss
-const styles = StyleSheet.create({
-    background: {
-        backgroundColor: 'rgba(222, 242, 241, 1)',
-        flexGrow:1, 
-        alignItems:'center', 
-        justifyContent: 'center'
-    },
-    TextStatus: {
-      fontWeight: "bold",
-      textDecorationLine: "underline",
-      fontSize: 25,
-      color: "black",
-      alignSelf: "center"
-    },
-    TitleText:{ 
-        textDecorationLine: 'underline',
-        fontSize: 30,
-        paddingTop: 30,
-        alignSelf: 'center'
-    },
-    NavBar: {
-        with: "100%",
-        elevation:8,
-        height: 50,
-        backgroundColor: 'rgba(43, 122, 120, 1)'
-    },
-    Button1: {
-        color: 'rgba(53, 167, 156, 1)',
-        borderWidth: 1,
-        position: 'absolute',
-        width: 50,
-        height: 80,
-        borderRadius: 20,
-    },
-    appButtonContainer: {
-        elevation: 10,
-        backgroundColor: 'rgba(53, 167, 156, 1)',
-        borderRadius: 10,
-        // padding: 50,
-        marginTop: 25,
-        marginBottom: 25,
-        marginHorizontal: "10%",
+    React.useEffect(() => {
+    const source = axios.CancelToken.source();
+    const url = `http://localhost:8163/cars`;
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(url, { cancelToken: source.token });
+        setIsLoading(false);
+        setdataSource(response.data);
+      } catch (error) {
+        if(axios.isCancel(error)){
+          console.log('Data fetching cancelled');
+        }else{
+         console.log(error)
+        }
+      }
+    };
+    fetchUsers();
+    return () => source.cancel("Data fetching cancelled");
+  }, []);
+          
 
-        paddingVertical: 30,
-        paddingHorizontal: "35%",
-    },
-    appButtonContainer2: {
-        elevation: 8,
-        backgroundColor: 'rgba(53, 167, 146, 1)',
-        borderRadius: 10,
-        // padding: 50,
-        marginTop: 25,
-        marginBottom: 10,
-        marginHorizontal: "20%",
-        paddingVertical: 20,
-        alignItems: "center"
-    },
-    appButtonText: {
-      color: "white",
-      fontSize: 17,
+        
+    const {CarName, carId} = route.params;
+    return (
+      <View style={{flexWrap: 'nowrap'}} contentContainerStyle={styles.background}  refreshControl = {<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
+        <AppButton  title={CarName} s={{alignSelf:"center"}} onPress={() => navigation.goBack()}/>
+        <Text style={styles.TextStatus}>STATUS</Text>
+        {console.log("carid 1: ",carId)}
+        {console.log("CarName 1: ",CarName)}
       
-    },
-    dropdownicon: {
-      // justityContent: 'flex-end'
-      position: 'absolute',
-      right: 0,
-      margin: 10,
-    },
-    carimg:{
-        width: "100%",
-        height: 200,
-        resizeMode: "contain",
-        // resizeMethod:"resize",
-        // position: "fix",
-    }
-     
-    
-})
+        {Car(CarName,carId, isLoading, dataSource)}
+     </View>
+    );
+}
 
-
-
-const AppButton = ({ onPress, title, s}) => (
-  <TouchableOpacity
-    onPress={onPress}
-    // style={styles.appButtonContainer}
-    style={s}
-  >
-    <Text style={[styles.appButtonText]}>
-      {title}
-    </Text>
-  </TouchableOpacity>
+const OutputLabel = ({text, styl})=>(
+    <View style={[styleOutputLabel.OutputLabel, {backgroundColor: styl}]}>
+      <Text style={{fontSize: 16}}>{text}</Text>
+      
+    </View>
 );
+
+//1.9-1
+
 
 
 
